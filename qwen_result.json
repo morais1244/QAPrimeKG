@@ -1,0 +1,341 @@
+[
+  {
+    "id": 1,
+    "question": "What are the names of all child diseases of 'Mendelian disease'?",
+    "difficulty": "Easy",
+    "expected_count": 1523,
+    "observed_count": 1523,
+    "gold_cypher": "MATCH (parent:disease {node_name: 'Mendelian disease'})-[:disease_disease]->(child:disease) RETURN child.node_name AS child_disease",
+    "candidate_cypher": "MATCH (d1:disease {node_name: 'Mendelian disease'})-[:disease_disease]->(d2:disease) RETURN d2.node_name",
+    "status": "Pass"
+  },
+  {
+    "id": 4,
+    "question": "Which phenotypes are present in the disease 'hereditary breast ovarian cancer syndrome'?",
+    "difficulty": "Easy",
+    "expected_count": 5,
+    "observed_count": 5,
+    "gold_cypher": "MATCH (d:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN p.node_name AS phenotype",
+    "candidate_cypher": "MATCH (d:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN p.node_name",
+    "status": "Pass"
+  },
+  {
+    "id": 8,
+    "question": "What is the node_id of the disease called 'hereditary breast ovarian cancer syndrome'?",
+    "difficulty": "Easy",
+    "expected_count": 1,
+    "observed_count": 1,
+    "gold_cypher": "MATCH (d:disease {node_name: 'hereditary breast ovarian cancer syndrome'}) RETURN d.node_id AS node_id",
+    "candidate_cypher": "MATCH (d:disease {node_name: 'hereditary breast ovarian cancer syndrome'}) RETURN d.node_id",
+    "status": "Pass"
+  },
+  {
+    "id": 9,
+    "question": "Return the node_source and node_index of the gene/protein 'BRCA2'.",
+    "difficulty": "Easy",
+    "expected_count": 1,
+    "observed_count": 1,
+    "gold_cypher": "MATCH (gp:gene__protein {node_name: 'BRCA2'}) RETURN gp.node_source AS source, gp.node_index AS node_index",
+    "candidate_cypher": "MATCH (g:gene__protein {node_name: 'BRCA2'}) RETURN g.node_source, g.node_index",
+    "status": "Pass"
+  },
+  {
+    "id": 10,
+    "question": "How many drugs are indicated for 'hereditary breast carcinoma'?",
+    "difficulty": "Easy",
+    "expected_count": 1,
+    "observed_count": 1,
+    "gold_cypher": "MATCH (d:disease {node_name: 'hereditary breast carcinoma'})-[:indication]->(dr:drug) RETURN count(dr) AS total_indicated_drugs",
+    "candidate_cypher": "MATCH (dr:drug)-[:indication]->(d:disease {node_name: 'hereditary breast carcinoma'}) RETURN count(dr)",
+    "status": "Pass"
+  },
+  {
+    "id": 13,
+    "question": "Find all diseases that share at least one phenotype with 'hereditary breast ovarian cancer syndrome'.",
+    "difficulty": "Medium",
+    "expected_count": 100,
+    "observed_count": 81,
+    "gold_cypher": "MATCH (d1:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_phenotype_positive]->(p:effect__phenotype)<-[:disease_phenotype_positive]-(d2:disease) WHERE d2.node_name <> 'hereditary breast ovarian cancer syndrome' RETURN DISTINCT d2.node_name AS related_disease, p.node_name AS shared_phenotype",
+    "candidate_cypher": "MATCH (d1:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_phenotype_positive]->(p:effect__phenotype)<-[:disease_phenotype_positive]-(d2:disease) WHERE d1 <> d2 RETURN DISTINCT d2.node_name",
+    "status": "Count Mismatch"
+  },
+  {
+    "id": 18,
+    "question": "Which phenotypes are shared between 'hereditary breast ovarian cancer syndrome' and 'hereditary breast carcinoma'?",
+    "difficulty": "Medium",
+    "expected_count": 1,
+    "observed_count": null,
+    "gold_cypher": "MATCH (d1:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_phenotype_positive]->(p:effect__phenotype)<-[:disease_phenotype_positive]-(d2:disease {node_name: 'hereditary breast carcinoma'}) RETURN p.node_name AS shared_phenotype",
+    "candidate_cypher": "Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}",
+    "status": "syntax error",
+    "error": "{neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'Error': expected 'ALTER', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'START DATABASE', 'STOP DATABASE', 'DEALLOCATE', 'DELETE', 'DENY', 'DETACH', 'DROP', 'DRYRUN', 'FILTER', 'FINISH', 'FOREACH', 'GRANT', 'INSERT', 'LET', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REALLOCATE', 'REMOVE', 'RENAME', 'RETURN', 'REVOKE', 'ENABLE SERVER', 'SET', 'SHOW', 'SKIP', 'TERMINATE', 'UNWIND', 'USE', 'WHEN', 'WITH' or '{' (line 1, column 1 (offset: 0))\n\"Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}\"\n ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}"
+  },
+  {
+    "id": 31,
+    "question": "What is the node_source of the drug 'Cisplatin'?",
+    "difficulty": "Easy",
+    "expected_count": 1,
+    "observed_count": 1,
+    "gold_cypher": "MATCH (dr:drug {node_name: 'Cisplatin'}) RETURN dr.node_source AS source",
+    "candidate_cypher": "MATCH (d:drug {node_name: 'Cisplatin'}) RETURN d.node_source",
+    "status": "Pass"
+  },
+  {
+    "id": 32,
+    "question": "List all exposures present in the graph.",
+    "difficulty": "Easy",
+    "expected_count": 818,
+    "observed_count": 818,
+    "gold_cypher": "MATCH (e:exposure) RETURN e.node_name AS exposure ORDER BY e.node_name",
+    "candidate_cypher": "MATCH (e:exposure) RETURN e.node_name",
+    "status": "Pass"
+  },
+  {
+    "id": 33,
+    "question": "How many diseases exist in this sample graph?",
+    "difficulty": "Easy",
+    "expected_count": 1,
+    "observed_count": null,
+    "gold_cypher": "MATCH (d:disease) RETURN count(d) AS total_diseases",
+    "candidate_cypher": "Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}",
+    "status": "syntax error",
+    "error": "{neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'Error': expected 'ALTER', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'START DATABASE', 'STOP DATABASE', 'DEALLOCATE', 'DELETE', 'DENY', 'DETACH', 'DROP', 'DRYRUN', 'FILTER', 'FINISH', 'FOREACH', 'GRANT', 'INSERT', 'LET', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REALLOCATE', 'REMOVE', 'RENAME', 'RETURN', 'REVOKE', 'ENABLE SERVER', 'SET', 'SHOW', 'SKIP', 'TERMINATE', 'UNWIND', 'USE', 'WHEN', 'WITH' or '{' (line 1, column 1 (offset: 0))\n\"Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}\"\n ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}"
+  },
+  {
+    "id": 34,
+    "question": "Which phenotypes are present in the disease 'hereditary breast carcinoma'?",
+    "difficulty": "Easy",
+    "expected_count": 4,
+    "observed_count": 4,
+    "gold_cypher": "MATCH (d:disease {node_name: 'hereditary breast carcinoma'})-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN p.node_name AS phenotype",
+    "candidate_cypher": "MATCH (d:disease {node_name: 'hereditary breast carcinoma'})-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN p.node_name",
+    "status": "Pass"
+  },
+  {
+    "id": 35,
+    "question": "Return the node_id and node_index of the drug 'Doxorubicin'.",
+    "difficulty": "Easy",
+    "expected_count": 1,
+    "observed_count": 1,
+    "gold_cypher": "MATCH (dr:drug {node_name: 'Doxorubicin'}) RETURN dr.node_id AS node_id, dr.node_index AS node_index",
+    "candidate_cypher": "MATCH (d:drug {node_name: 'Doxorubicin'}) RETURN d.node_id, d.node_index",
+    "status": "Pass"
+  },
+  {
+    "id": 37,
+    "question": "List all genes/proteins with node_source equal to 'NCBI' present in the sample.",
+    "difficulty": "Easy",
+    "expected_count": 27671,
+    "observed_count": null,
+    "gold_cypher": "MATCH (gp:gene__protein {node_source: 'NCBI'}) RETURN gp.node_name AS gene_protein ORDER BY gp.node_name",
+    "candidate_cypher": "Error: {'message': 'Upstream error from Alibaba: Request rate increased too quickly. To ensure system stability, please adjust your client logic to scale requests more smoothly over time.', 'code': 502}",
+    "status": "syntax error",
+    "error": "{neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'Error': expected 'ALTER', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'START DATABASE', 'STOP DATABASE', 'DEALLOCATE', 'DELETE', 'DENY', 'DETACH', 'DROP', 'DRYRUN', 'FILTER', 'FINISH', 'FOREACH', 'GRANT', 'INSERT', 'LET', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REALLOCATE', 'REMOVE', 'RENAME', 'RETURN', 'REVOKE', 'ENABLE SERVER', 'SET', 'SHOW', 'SKIP', 'TERMINATE', 'UNWIND', 'USE', 'WHEN', 'WITH' or '{' (line 1, column 1 (offset: 0))\n\"Error: {'message': 'Upstream error from Alibaba: Request rate increased too quickly. To ensure system stability, please adjust your client logic to scale requests more smoothly over time.', 'code': 502}\"\n ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}"
+  },
+  {
+    "id": 46,
+    "question": "List diseases whose names contain 'hereditary' and that have at least one associated phenotype.",
+    "difficulty": "Medium",
+    "expected_count": 2055,
+    "observed_count": null,
+    "gold_cypher": "MATCH (d:disease)-[:disease_phenotype_positive]->(p:effect__phenotype) WHERE d.node_name CONTAINS 'hereditary' RETURN DISTINCT d.node_name AS disease, p.node_name AS phenotype",
+    "candidate_cypher": "Error: {'message': 'Upstream error from Alibaba: Request rate increased too quickly. To ensure system stability, please adjust your client logic to scale requests more smoothly over time.', 'code': 502}",
+    "status": "syntax error",
+    "error": "{neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'Error': expected 'ALTER', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'START DATABASE', 'STOP DATABASE', 'DEALLOCATE', 'DELETE', 'DENY', 'DETACH', 'DROP', 'DRYRUN', 'FILTER', 'FINISH', 'FOREACH', 'GRANT', 'INSERT', 'LET', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REALLOCATE', 'REMOVE', 'RENAME', 'RETURN', 'REVOKE', 'ENABLE SERVER', 'SET', 'SHOW', 'SKIP', 'TERMINATE', 'UNWIND', 'USE', 'WHEN', 'WITH' or '{' (line 1, column 1 (offset: 0))\n\"Error: {'message': 'Upstream error from Alibaba: Request rate increased too quickly. To ensure system stability, please adjust your client logic to scale requests more smoothly over time.', 'code': 502}\"\n ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}"
+  },
+  {
+    "id": 54,
+    "question": "For each phenotype, list all associated diseases and the total number of diseases per phenotype, sorted in descending order.",
+    "difficulty": "Hard",
+    "expected_count": 9342,
+    "observed_count": 9342,
+    "gold_cypher": "MATCH (d:disease)-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN p.node_name AS phenotype, collect(DISTINCT d.node_name) AS diseases, count(DISTINCT d) AS disease_count ORDER BY disease_count DESC",
+    "candidate_cypher": "MATCH (d:disease)-[:disease_phenotype_positive]->(p:effect__phenotype)\nWITH p, collect(d.node_name) AS diseases, count(d) AS disease_count\nRETURN p.node_name AS phenotype, diseases, disease_count\nORDER BY disease_count DESC",
+    "status": "Pass"
+  },
+  {
+    "id": 58,
+    "question": "Find diseases that are exactly 2 hops away from 'Mendelian disease' via parent-child relationships, and return the full path.",
+    "difficulty": "Hard",
+    "expected_count": 2080,
+    "observed_count": 2638,
+    "gold_cypher": "MATCH path = (root:disease {node_name: 'Mendelian disease'})-[:disease_disease]->(mid:disease)-[:disease_disease]->(leaf:disease) RETURN root.node_name AS root, mid.node_name AS intermediate, leaf.node_name AS leaf_disease",
+    "candidate_cypher": "MATCH p = (start:disease {node_name: 'Mendelian disease'})-[:disease_disease*2]-(end:disease) RETURN p",
+    "status": "Count Mismatch"
+  },
+  {
+    "id": 60,
+    "question": "Build a complete profile of the disease 'hereditary breast ovarian cancer syndrome': return all indicated, contraindicated, and off-label drugs, all phenotypes, the top 10 associated genes, and all linked exposures, in separate columns.",
+    "difficulty": "Hard",
+    "expected_count": 1,
+    "observed_count": 1,
+    "gold_cypher": "MATCH (d:disease {node_name: 'hereditary breast ovarian cancer syndrome'}) OPTIONAL MATCH (d)-[:indication]->(ind:drug) WITH d, collect(DISTINCT ind.node_name) AS indicated OPTIONAL MATCH (d)-[:contraindication]->(contra:drug) WITH d, indicated, collect(DISTINCT contra.node_name) AS contraindicated OPTIONAL MATCH (d)-[:off]->(off_dr:drug) WITH d, indicated, contraindicated, collect(DISTINCT off_dr.node_name) AS off_label OPTIONAL MATCH (d)-[:disease_phenotype_positive]->(p:effect__phenotype) WITH d, indicated, contraindicated, off_label, collect(DISTINCT p.node_name) AS phenotypes OPTIONAL MATCH (d)-[:disease_protein]->(gp:gene__protein) WITH d, indicated, contraindicated, off_label, phenotypes, collect(DISTINCT gp.node_name)[..10] AS top10_genes OPTIONAL MATCH (d)-[:exposure_disease]->(e:exposure) RETURN d.node_name AS disease, indicated, contraindicated, off_label, phenotypes, top10_genes, collect(DISTINCT e.node_name) AS exposures",
+    "candidate_cypher": "MATCH (d:disease {node_name: 'hereditary breast ovarian cancer syndrome'})\nCALL {\n  WITH d\n  MATCH (d)<-[r:indication]-(drug:drug)\n  WHERE r.type = 'indicated'\n  RETURN collect(DISTINCT drug.node_name) AS indicated_drugs\n}\nCALL {\n  WITH d\n  MATCH (d)<-[r:indication]-(drug:drug)\n  WHERE r.type = 'contraindicated'\n  RETURN collect(DISTINCT drug.node_name) AS contraindicated_drugs\n}\nCALL {\n  WITH d\n  MATCH (d)<-[r:indication]-(drug:drug)\n  WHERE r.type = 'off-label'\n  RETURN collect(DISTINCT drug.node_name) AS off_label_drugs\n}\nCALL {\n  WITH d\n  MATCH (d)-[:disease_phenotype_positive]->(p:effect__phenotype)\n  RETURN collect(DISTINCT p.node_name) AS phenotypes\n}\nCALL {\n  WITH d\n  MATCH (d)-[:disease_protein]->(g:gene__protein)\n  WITH g ORDER BY g.node_name\n  RETURN collect(g.node_name)[..10] AS top_10_genes\n}\nCALL {\n  WITH d\n  MATCH (d)<-[:exposure_disease]-(e:exposure)\n  RETURN collect(DISTINCT e.node_name) AS exposures\n}\nRETURN indicated_drugs, contraindicated_drugs, off_label_drugs, phenotypes, top_10_genes, exposures",
+    "status": "Pass"
+  },
+  {
+    "id": 72,
+    "question": "Which diseases have at least 2 different associated phenotypes? Return the disease name and the total number of phenotypes.",
+    "difficulty": "Medium",
+    "expected_count": 6424,
+    "observed_count": 6424,
+    "gold_cypher": "MATCH (d:disease)-[:disease_phenotype_positive]->(p:effect__phenotype) WITH d, count(DISTINCT p) AS phenotype_count WHERE phenotype_count >= 2 RETURN d.node_name AS disease, phenotype_count ORDER BY phenotype_count DESC",
+    "candidate_cypher": "MATCH (d:disease)-[:disease_phenotype_positive]->(p:effect__phenotype) WITH d, count(DISTINCT p) AS phenotype_count WHERE phenotype_count >= 2 RETURN d.node_name AS disease_name, phenotype_count",
+    "status": "Pass"
+  },
+  {
+    "id": 78,
+    "question": "Which sibling diseases of 'hereditary breast carcinoma' exist \u2014 that is, diseases sharing the same parent disease?",
+    "difficulty": "Medium",
+    "expected_count": 1536,
+    "observed_count": null,
+    "gold_cypher": "MATCH (parent:disease)-[:disease_disease]->(target:disease {node_name: 'hereditary breast carcinoma'}) MATCH (parent)-[:disease_disease]->(sibling:disease) WHERE sibling.node_name <> 'hereditary breast carcinoma' RETURN DISTINCT sibling.node_name AS sibling_disease",
+    "candidate_cypher": "Error: {'message': 'Upstream error from Alibaba: Request rate increased too quickly. To ensure system stability, please adjust your client logic to scale requests more smoothly over time.', 'code': 502}",
+    "status": "syntax error",
+    "error": "{neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'Error': expected 'ALTER', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'START DATABASE', 'STOP DATABASE', 'DEALLOCATE', 'DELETE', 'DENY', 'DETACH', 'DROP', 'DRYRUN', 'FILTER', 'FINISH', 'FOREACH', 'GRANT', 'INSERT', 'LET', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REALLOCATE', 'REMOVE', 'RENAME', 'RETURN', 'REVOKE', 'ENABLE SERVER', 'SET', 'SHOW', 'SKIP', 'TERMINATE', 'UNWIND', 'USE', 'WHEN', 'WITH' or '{' (line 1, column 1 (offset: 0))\n\"Error: {'message': 'Upstream error from Alibaba: Request rate increased too quickly. To ensure system stability, please adjust your client logic to scale requests more smoothly over time.', 'code': 502}\"\n ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}"
+  },
+  {
+    "id": 83,
+    "question": "Find all disease\u2192disease\u2192disease paths (two parent-child hops) starting from 'breast neoplasm'. Return the three nodes in the path.",
+    "difficulty": "Hard",
+    "expected_count": 36,
+    "observed_count": 36,
+    "gold_cypher": "MATCH (root:disease {node_name: 'breast neoplasm'})-[:disease_disease]->(mid:disease)-[:disease_disease]->(leaf:disease) RETURN root.node_name AS root, mid.node_name AS intermediate, leaf.node_name AS leaf_disease",
+    "candidate_cypher": "MATCH (d1:disease {node_name: 'breast neoplasm'})-[:disease_disease]->(d2:disease)-[:disease_disease]->(d3:disease) RETURN d1, d2, d3",
+    "status": "Pass"
+  },
+  {
+    "id": 88,
+    "question": "Find all diseases that have no associated gene/protein (isolated in terms of disease_protein).",
+    "difficulty": "Hard",
+    "expected_count": 17080,
+    "observed_count": null,
+    "gold_cypher": "MATCH (d:disease) WHERE NOT EXISTS { MATCH (d)-[:disease_protein]->(:gene__protein) } RETURN d.node_name AS disease ORDER BY d.node_name",
+    "candidate_cypher": "Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}",
+    "status": "syntax error",
+    "error": "{neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'Error': expected 'ALTER', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'START DATABASE', 'STOP DATABASE', 'DEALLOCATE', 'DELETE', 'DENY', 'DETACH', 'DROP', 'DRYRUN', 'FILTER', 'FINISH', 'FOREACH', 'GRANT', 'INSERT', 'LET', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REALLOCATE', 'REMOVE', 'RENAME', 'RETURN', 'REVOKE', 'ENABLE SERVER', 'SET', 'SHOW', 'SKIP', 'TERMINATE', 'UNWIND', 'USE', 'WHEN', 'WITH' or '{' (line 1, column 1 (offset: 0))\n\"Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}\"\n ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}"
+  },
+  {
+    "id": 89,
+    "question": "Compute, by hierarchical level (depth 1 and depth 2 from 'Mendelian disease'), how many diseases exist at each level.",
+    "difficulty": "Hard",
+    "expected_count": 1,
+    "observed_count": 2,
+    "gold_cypher": "MATCH (root:disease {node_name: 'Mendelian disease'})-[:disease_disease]->(level1:disease) WITH count(DISTINCT level1) AS level1_count MATCH (root2:disease {node_name: 'Mendelian disease'})-[:disease_disease]->(:disease)-[:disease_disease]->(level2:disease) RETURN level1_count, count(DISTINCT level2) AS level2_count",
+    "candidate_cypher": "MATCH (root:disease {node_name: 'Mendelian disease'})\nMATCH path = (root)-[:disease_disease*1..2]->(d:disease)\nWITH d, min(length(path)) as level\nRETURN level, count(d) as disease_count\nORDER BY level",
+    "status": "Count Mismatch"
+  },
+  {
+    "id": 92,
+    "question": "Which phenotypes are associated with the child diseases of 'hereditary breast ovarian cancer syndrome'?",
+    "difficulty": "Medium",
+    "expected_count": 5,
+    "observed_count": 4,
+    "gold_cypher": "MATCH (parent:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_disease]->(child:disease)-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN child.node_name AS child_disease, p.node_name AS phenotype",
+    "candidate_cypher": "MATCH (parent:disease {node_name: 'hereditary breast ovarian cancer syndrome'})<-[:disease_disease]-(child:disease)-[:disease_phenotype_positive]->(phenotype:effect__phenotype) RETURN DISTINCT phenotype.node_name",
+    "status": "Count Mismatch"
+  },
+  {
+    "id": 105,
+    "question": "Which diseases are grandparents of 'hereditary breast carcinoma' via parent-child relationships?",
+    "difficulty": "Medium",
+    "expected_count": 3,
+    "observed_count": 1,
+    "gold_cypher": "MATCH (grandparent:disease)-[:disease_disease]->(parent:disease)-[:disease_disease]->(target:disease {node_name: 'hereditary breast carcinoma'}) RETURN DISTINCT grandparent.node_name AS grandparent_disease, parent.node_name AS parent_disease",
+    "candidate_cypher": "MATCH (d:disease {node_name: 'hereditary breast carcinoma'})-[:disease_disease]->(:disease)-[:disease_disease]->(gp:disease) RETURN DISTINCT gp.node_name",
+    "status": "Count Mismatch"
+  },
+  {
+    "id": 133,
+    "question": "Which diseases have as parent a disease whose name contains 'breast'?",
+    "difficulty": "Medium",
+    "expected_count": 210,
+    "observed_count": 131,
+    "gold_cypher": "MATCH (parent:disease)-[:disease_disease]->(child:disease) WHERE parent.node_name CONTAINS 'breast' RETURN parent.node_name AS parent_disease, child.node_name AS child_disease",
+    "candidate_cypher": "MATCH (d:disease)-[:disease_disease]->(parent:disease) WHERE parent.node_name CONTAINS 'breast' RETURN DISTINCT d.node_name",
+    "status": "Count Mismatch"
+  },
+  {
+    "id": 136,
+    "question": "Which diseases are grandchildren of 'breast neoplasm' (two parent-child hops)? Also return the intermediate disease.",
+    "difficulty": "Medium",
+    "expected_count": 36,
+    "observed_count": 3,
+    "gold_cypher": "MATCH (root:disease {node_name: 'breast neoplasm'})-[:disease_disease]->(mid:disease)-[:disease_disease]->(leaf:disease) RETURN mid.node_name AS intermediate_disease, leaf.node_name AS grandchild_disease",
+    "candidate_cypher": "MATCH (parent:disease {node_name: 'breast neoplasm'})<-[:disease_disease]-(intermediate:disease)<-[:disease_disease]-(grandchild:disease) RETURN DISTINCT grandchild.node_name, intermediate.node_name",
+    "status": "Count Mismatch"
+  },
+  {
+    "id": 142,
+    "question": "For the disease 'hereditary breast carcinoma', how many of its associated genes are also found in the disease 'breast neoplasm'?",
+    "difficulty": "Medium",
+    "expected_count": 1,
+    "observed_count": null,
+    "gold_cypher": "MATCH (d1:disease {node_name: 'hereditary breast carcinoma'})-[:disease_protein]->(gp:gene__protein) MATCH (d2:disease {node_name: 'breast neoplasm'})-[:disease_protein]->(gp) RETURN count(DISTINCT gp) AS shared_gene_count",
+    "candidate_cypher": "Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}",
+    "status": "syntax error",
+    "error": "{neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'Error': expected 'ALTER', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'START DATABASE', 'STOP DATABASE', 'DEALLOCATE', 'DELETE', 'DENY', 'DETACH', 'DROP', 'DRYRUN', 'FILTER', 'FINISH', 'FOREACH', 'GRANT', 'INSERT', 'LET', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REALLOCATE', 'REMOVE', 'RENAME', 'RETURN', 'REVOKE', 'ENABLE SERVER', 'SET', 'SHOW', 'SKIP', 'TERMINATE', 'UNWIND', 'USE', 'WHEN', 'WITH' or '{' (line 1, column 1 (offset: 0))\n\"Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}\"\n ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}"
+  },
+  {
+    "id": 143,
+    "question": "Which child diseases of 'breast neoplasm' also have their own child diseases (i.e., are also parent diseases)?",
+    "difficulty": "Medium",
+    "expected_count": 7,
+    "observed_count": 7,
+    "gold_cypher": "MATCH (root:disease {node_name: 'breast neoplasm'})-[:disease_disease]->(mid:disease)-[:disease_disease]->(:disease) RETURN DISTINCT mid.node_name AS disease_with_children",
+    "candidate_cypher": "MATCH (p:disease {node_name: 'breast neoplasm'})-[:disease_disease]->(c:disease)-[:disease_disease]->(gc:disease) RETURN DISTINCT c.node_name",
+    "status": "Pass"
+  },
+  {
+    "id": 198,
+    "question": "Find the shortest path between the node 'breast neoplasm' and the node 'autosomal dominant disease' using disease_disease relationships. Return the nodes in the path and its length.",
+    "difficulty": "Hard",
+    "expected_count": 1,
+    "observed_count": 1,
+    "gold_cypher": "MATCH path = shortestPath((start:disease {node_name: 'breast neoplasm'})-[:disease_disease*]-(end:disease {node_name: 'autosomal dominant disease'})) RETURN [n IN nodes(path) | n.node_name] AS path_nodes, length(path) AS path_length",
+    "candidate_cypher": "MATCH (start:disease {node_name: 'breast neoplasm'}), (end:disease {node_name: 'autosomal dominant disease'}) MATCH path = shortestPath((start)-[:disease_disease*]-(end)) RETURN nodes(path), length(path)",
+    "status": "Pass"
+  },
+  {
+    "id": 204,
+    "question": "What is the total connectivity degree (in + out) of each node label? Return the label and the sum of all relationships.",
+    "difficulty": "Hard",
+    "expected_count": 10,
+    "observed_count": null,
+    "gold_cypher": "MATCH (n)-[r]-(m) RETURN labels(n)[0] AS node_label, count(r) AS total_connections ORDER BY total_connections DESC",
+    "candidate_cypher": "MATCH (n)\nWITH labels(n)[0] AS label, size((n)--()) AS degree\nRETURN label, sum(degree) AS total_degree\nORDER BY total_degree DESC",
+    "status": "syntax error",
+    "error": "{neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: A pattern expression should only be used in order to test the existence of a pattern. It can no longer be used inside the function size(), an alternative is to replace size() with COUNT {}. (line 2, column 34 (offset: 43))\n\"WITH labels(n)[0] AS label, size((n)--()) AS degree\"\n                                  ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}"
+  },
+  {
+    "id": 205,
+    "question": "For each child disease of 'hereditary breast ovarian cancer syndrome', return: name, number of genes, number of phenotypes, number of drugs of any type, and number of exposures.",
+    "difficulty": "Hard",
+    "expected_count": 1,
+    "observed_count": null,
+    "gold_cypher": "MATCH (parent:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_disease]->(child:disease) OPTIONAL MATCH (child)-[:disease_protein]->(gp:gene__protein) OPTIONAL MATCH (child)-[:disease_phenotype_positive]->(p:effect__phenotype) OPTIONAL MATCH (child)-[:indication|off|contraindication]->(dr:drug) OPTIONAL MATCH (child)-[:exposure_disease]->(e:exposure) RETURN child.node_name AS child_disease, count(DISTINCT gp) AS genes, count(DISTINCT p) AS phenotypes, count(DISTINCT dr) AS drugs, count(DISTINCT e) AS exposures ORDER BY genes DESC",
+    "candidate_cypher": "Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}",
+    "status": "syntax error",
+    "error": "{neo4j_code: Neo.ClientError.Statement.SyntaxError} {message: Invalid input 'Error': expected 'ALTER', 'ORDER BY', 'CALL', 'CREATE', 'LOAD CSV', 'START DATABASE', 'STOP DATABASE', 'DEALLOCATE', 'DELETE', 'DENY', 'DETACH', 'DROP', 'DRYRUN', 'FILTER', 'FINISH', 'FOREACH', 'GRANT', 'INSERT', 'LET', 'LIMIT', 'MATCH', 'MERGE', 'NODETACH', 'OFFSET', 'OPTIONAL', 'REALLOCATE', 'REMOVE', 'RENAME', 'RETURN', 'REVOKE', 'ENABLE SERVER', 'SET', 'SHOW', 'SKIP', 'TERMINATE', 'UNWIND', 'USE', 'WHEN', 'WITH' or '{' (line 1, column 1 (offset: 0))\n\"Error: Error code: 429 - {'error': {'message': 'Provider returned error', 'code': 429, 'metadata': {'raw': 'qwen/qwen3.6-plus:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations', 'provider_name': 'Alibaba', 'is_byok': False}}, 'user_id': 'user_3BQW2XqKAQz4LguLle6MF1tnfOY'}\"\n ^} {gql_status: 42001} {gql_status_description: error: syntax error or access rule violation - invalid syntax}"
+  },
+  {
+    "id": 209,
+    "question": "What are the 5 most connected diseases in terms of distinct neighbors (unique nodes reachable by any relationship in 1 hop)?",
+    "difficulty": "Hard",
+    "expected_count": 5,
+    "observed_count": 5,
+    "gold_cypher": "MATCH (d:disease)-[r]-(neighbor) WHERE neighbor.node_name IS NOT NULL RETURN d.node_name AS disease, count(DISTINCT neighbor.node_name) AS unique_neighbors ORDER BY unique_neighbors DESC LIMIT 5",
+    "candidate_cypher": "MATCH (d:disease)--(neighbor) WITH d, COUNT(DISTINCT neighbor) AS neighbor_count ORDER BY neighbor_count DESC LIMIT 5 RETURN d.node_name AS disease_name, d.node_id AS disease_id, neighbor_count",
+    "status": "Pass"
+  },
+  {
+    "id": 210,
+    "question": "Build a complete comparative profile of the 3 main diseases: for each, return exclusive genes, genes shared with the other two, indicated drugs, off-label drugs, contraindicated drugs, phenotypes, and exposures \u2014 all in a single query using chained WITH.",
+    "difficulty": "Hard",
+    "expected_count": 3,
+    "observed_count": 0,
+    "gold_cypher": "MATCH (d:disease) WHERE d.node_name IN ['hereditary breast ovarian cancer syndrome','hereditary breast carcinoma','breast neoplasm'] OPTIONAL MATCH (d)-[:disease_protein]->(gp:gene__protein) WITH d, collect(DISTINCT gp.node_name) AS all_genes OPTIONAL MATCH (d)-[:indication]->(ind:drug) WITH d, all_genes, collect(DISTINCT ind.node_name) AS indicated OPTIONAL MATCH (d)-[:off]->(off_dr:drug) WITH d, all_genes, indicated, collect(DISTINCT off_dr.node_name) AS off_label OPTIONAL MATCH (d)-[:contraindication]->(contra:drug) WITH d, all_genes, indicated, off_label, collect(DISTINCT contra.node_name) AS contraindicated OPTIONAL MATCH (d)-[:disease_phenotype_positive]->(p:effect__phenotype) WITH d, all_genes, indicated, off_label, contraindicated, collect(DISTINCT p.node_name) AS phenotypes OPTIONAL MATCH (d)-[:exposure_disease]->(e:exposure) RETURN d.node_name AS disease, size(all_genes) AS total_genes, indicated, off_label, contraindicated, phenotypes, collect(DISTINCT e.node_name) AS exposures ORDER BY total_genes DESC",
+    "candidate_cypher": "WITH ['Disease1', 'Disease2', 'Disease3'] AS disease_names\nMATCH (d:disease) WHERE d.node_name IN disease_names\nWITH collect(d) AS diseases\nUNWIND diseases AS d\nOPTIONAL MATCH (d)-[:disease_protein]->(g:gene__protein)\nWITH d, collect(DISTINCT g.node_name) AS genes, diseases\nWITH collect({disease: d, genes: genes}) AS dg_map\nUNWIND dg_map AS item\nWITH item.disease AS d, item.genes AS genes, dg_map\nWITH d, genes, [x IN dg_map WHERE x.disease <> d | x.genes] AS other_gene_lists\nWITH d, genes, other_gene_lists, reduce(flat = [], lst IN other_gene_lists | flat + lst) AS all_other_genes\nWITH d, genes, other_gene_lists, all_other_genes,\n     [g IN genes WHERE NOT g IN all_other_genes] AS exclusive_genes,\n     [g IN genes WHERE g IN other_gene_lists[0] AND g IN other_gene_lists[1]] AS shared_genes\nOPTIONAL MATCH (dr_ind:drug)-[:indication]->(d)\nWITH d, exclusive_genes, shared_genes, collect(DISTINCT dr_ind.node_name) AS indicated_drugs\nOPTIONAL MATCH (dr_off:drug)-[:off_label]->(d)\nWITH d, exclusive_genes, shared_genes, indicated_drugs, collect(DISTINCT dr_off.node_name) AS off_label_drugs\nOPTIONAL MATCH (dr_con:drug)-[:contraindication]->(d)\nWITH d, exclusive_genes, shared_genes, indicated_drugs, off_label_drugs, collect(DISTINCT dr_con.node_name) AS contraindicated_drugs\nOPTIONAL MATCH (d)-[:disease_phenotype_positive]->(p:effect__phenotype)\nWITH d, exclusive_genes, shared_genes, indicated_drugs, off_label_drugs, contraindicated_drugs, collect(DISTINCT p.node_name) AS phenotypes\nOPTIONAL MATCH (e:exposure)-[:exposure_disease]->(d)\nWITH d, exclusive_genes, shared_genes, indicated_drugs, off_label_drugs, contraindicated_drugs, phenotypes, collect(DISTINCT e.node_name) AS exposures\nRETURN d.node_name AS disease, exclusive_genes, shared_genes, indicated_drugs, off_label_drugs, contraindicated_drugs, phenotypes, exposures",
+    "status": "Count Mismatch"
+  }
+]

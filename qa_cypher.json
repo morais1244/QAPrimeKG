@@ -1,0 +1,233 @@
+[
+  {
+    "id": 1,
+    "question": "What are the names of all child diseases of 'Mendelian disease'?",
+    "cypher": "MATCH (parent:disease {node_name: 'Mendelian disease'})-[:disease_disease]->(child:disease) RETURN child.node_name AS child_disease",
+    "difficulty": "Easy",
+    "expected_count": 1523
+  },
+  {
+    "id": 4,
+    "question": "Which phenotypes are present in the disease 'hereditary breast ovarian cancer syndrome'?",
+    "cypher": "MATCH (d:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN p.node_name AS phenotype",
+    "difficulty": "Easy",
+    "expected_count": 5
+  },
+  {
+    "id": 8,
+    "question": "What is the node_id of the disease called 'hereditary breast ovarian cancer syndrome'?",
+    "cypher": "MATCH (d:disease {node_name: 'hereditary breast ovarian cancer syndrome'}) RETURN d.node_id AS node_id",
+    "difficulty": "Easy",
+    "expected_count": 1
+  },
+  {
+    "id": 9,
+    "question": "Return the node_source and node_index of the gene/protein 'BRCA2'.",
+    "cypher": "MATCH (gp:gene__protein {node_name: 'BRCA2'}) RETURN gp.node_source AS source, gp.node_index AS node_index",
+    "difficulty": "Easy",
+    "expected_count": 1
+  },
+  {
+    "id": 10,
+    "question": "How many drugs are indicated for 'hereditary breast carcinoma'?",
+    "cypher": "MATCH (d:disease {node_name: 'hereditary breast carcinoma'})-[:indication]->(dr:drug) RETURN count(dr) AS total_indicated_drugs",
+    "difficulty": "Easy",
+    "expected_count": 1
+  },
+  {
+    "id": 13,
+    "question": "Find all diseases that share at least one phenotype with 'hereditary breast ovarian cancer syndrome'.",
+    "cypher": "MATCH (d1:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_phenotype_positive]->(p:effect__phenotype)<-[:disease_phenotype_positive]-(d2:disease) WHERE d2.node_name <> 'hereditary breast ovarian cancer syndrome' RETURN DISTINCT d2.node_name AS related_disease, p.node_name AS shared_phenotype",
+    "difficulty": "Medium",
+    "expected_count": 100
+  },
+  {
+    "id": 18,
+    "question": "Which phenotypes are shared between 'hereditary breast ovarian cancer syndrome' and 'hereditary breast carcinoma'?",
+    "cypher": "MATCH (d1:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_phenotype_positive]->(p:effect__phenotype)<-[:disease_phenotype_positive]-(d2:disease {node_name: 'hereditary breast carcinoma'}) RETURN p.node_name AS shared_phenotype",
+    "difficulty": "Medium",
+    "expected_count": 1
+  },
+  {
+    "id": 31,
+    "question": "What is the node_source of the drug 'Cisplatin'?",
+    "cypher": "MATCH (dr:drug {node_name: 'Cisplatin'}) RETURN dr.node_source AS source",
+    "difficulty": "Easy",
+    "expected_count": 1
+  },
+  {
+    "id": 32,
+    "question": "List all exposures present in the graph.",
+    "cypher": "MATCH (e:exposure) RETURN e.node_name AS exposure ORDER BY e.node_name",
+    "difficulty": "Easy",
+    "expected_count": 818
+  },
+  {
+    "id": 33,
+    "question": "How many diseases exist in this sample graph?",
+    "cypher": "MATCH (d:disease) RETURN count(d) AS total_diseases",
+    "difficulty": "Easy",
+    "expected_count": 1
+  },
+  {
+    "id": 34,
+    "question": "Which phenotypes are present in the disease 'hereditary breast carcinoma'?",
+    "cypher": "MATCH (d:disease {node_name: 'hereditary breast carcinoma'})-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN p.node_name AS phenotype",
+    "difficulty": "Easy",
+    "expected_count": 4
+  },
+  {
+    "id": 35,
+    "question": "Return the node_id and node_index of the drug 'Doxorubicin'.",
+    "cypher": "MATCH (dr:drug {node_name: 'Doxorubicin'}) RETURN dr.node_id AS node_id, dr.node_index AS node_index",
+    "difficulty": "Easy",
+    "expected_count": 1
+  },
+  {
+    "id": 37,
+    "question": "List all genes/proteins with node_source equal to 'NCBI' present in the sample.",
+    "cypher": "MATCH (gp:gene__protein {node_source: 'NCBI'}) RETURN gp.node_name AS gene_protein ORDER BY gp.node_name",
+    "difficulty": "Easy",
+    "expected_count": 27671
+  },
+  {
+    "id": 46,
+    "question": "List diseases whose names contain 'hereditary' and that have at least one associated phenotype.",
+    "cypher": "MATCH (d:disease)-[:disease_phenotype_positive]->(p:effect__phenotype) WHERE d.node_name CONTAINS 'hereditary' RETURN DISTINCT d.node_name AS disease, p.node_name AS phenotype",
+    "difficulty": "Medium",
+    "expected_count": 2055
+  },
+  {
+    "id": 54,
+    "question": "For each phenotype, list all associated diseases and the total number of diseases per phenotype, sorted in descending order.",
+    "cypher": "MATCH (d:disease)-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN p.node_name AS phenotype, collect(DISTINCT d.node_name) AS diseases, count(DISTINCT d) AS disease_count ORDER BY disease_count DESC",
+    "difficulty": "Hard",
+    "expected_count": 9342
+  },
+  {
+    "id": 58,
+    "question": "Find diseases that are exactly 2 hops away from 'Mendelian disease' via parent-child relationships, and return the full path.",
+    "cypher": "MATCH path = (root:disease {node_name: 'Mendelian disease'})-[:disease_disease]->(mid:disease)-[:disease_disease]->(leaf:disease) RETURN root.node_name AS root, mid.node_name AS intermediate, leaf.node_name AS leaf_disease",
+    "difficulty": "Hard",
+    "expected_count": 2080
+  },
+  {
+    "id": 60,
+    "question": "Build a complete profile of the disease 'hereditary breast ovarian cancer syndrome': return all indicated, contraindicated, and off-label drugs, all phenotypes, the top 10 associated genes, and all linked exposures, in separate columns.",
+    "cypher": "MATCH (d:disease {node_name: 'hereditary breast ovarian cancer syndrome'}) OPTIONAL MATCH (d)-[:indication]->(ind:drug) WITH d, collect(DISTINCT ind.node_name) AS indicated OPTIONAL MATCH (d)-[:contraindication]->(contra:drug) WITH d, indicated, collect(DISTINCT contra.node_name) AS contraindicated OPTIONAL MATCH (d)-[:off]->(off_dr:drug) WITH d, indicated, contraindicated, collect(DISTINCT off_dr.node_name) AS off_label OPTIONAL MATCH (d)-[:disease_phenotype_positive]->(p:effect__phenotype) WITH d, indicated, contraindicated, off_label, collect(DISTINCT p.node_name) AS phenotypes OPTIONAL MATCH (d)-[:disease_protein]->(gp:gene__protein) WITH d, indicated, contraindicated, off_label, phenotypes, collect(DISTINCT gp.node_name)[..10] AS top10_genes OPTIONAL MATCH (d)-[:exposure_disease]->(e:exposure) RETURN d.node_name AS disease, indicated, contraindicated, off_label, phenotypes, top10_genes, collect(DISTINCT e.node_name) AS exposures",
+    "difficulty": "Hard",
+    "expected_count": 1
+  },
+  {
+    "id": 72,
+    "question": "Which diseases have at least 2 different associated phenotypes? Return the disease name and the total number of phenotypes.",
+    "cypher": "MATCH (d:disease)-[:disease_phenotype_positive]->(p:effect__phenotype) WITH d, count(DISTINCT p) AS phenotype_count WHERE phenotype_count >= 2 RETURN d.node_name AS disease, phenotype_count ORDER BY phenotype_count DESC",
+    "difficulty": "Medium",
+    "expected_count": 6424
+  },
+  {
+    "id": 78,
+    "question": "Which sibling diseases of 'hereditary breast carcinoma' exist — that is, diseases sharing the same parent disease?",
+    "cypher": "MATCH (parent:disease)-[:disease_disease]->(target:disease {node_name: 'hereditary breast carcinoma'}) MATCH (parent)-[:disease_disease]->(sibling:disease) WHERE sibling.node_name <> 'hereditary breast carcinoma' RETURN DISTINCT sibling.node_name AS sibling_disease",
+    "difficulty": "Medium",
+    "expected_count": 1536
+  },
+  {
+    "id": 83,
+    "question": "Find all disease→disease→disease paths (two parent-child hops) starting from 'breast neoplasm'. Return the three nodes in the path.",
+    "cypher": "MATCH (root:disease {node_name: 'breast neoplasm'})-[:disease_disease]->(mid:disease)-[:disease_disease]->(leaf:disease) RETURN root.node_name AS root, mid.node_name AS intermediate, leaf.node_name AS leaf_disease",
+    "difficulty": "Hard",
+    "expected_count": 36
+  },
+  {
+    "id": 88,
+    "question": "Find all diseases that have no associated gene/protein (isolated in terms of disease_protein).",
+    "cypher": "MATCH (d:disease) WHERE NOT EXISTS { MATCH (d)-[:disease_protein]->(:gene__protein) } RETURN d.node_name AS disease ORDER BY d.node_name",
+    "difficulty": "Hard",
+    "expected_count": 17080
+  },
+  {
+    "id": 89,
+    "question": "Compute, by hierarchical level (depth 1 and depth 2 from 'Mendelian disease'), how many diseases exist at each level.",
+    "cypher": "MATCH (root:disease {node_name: 'Mendelian disease'})-[:disease_disease]->(level1:disease) WITH count(DISTINCT level1) AS level1_count MATCH (root2:disease {node_name: 'Mendelian disease'})-[:disease_disease]->(:disease)-[:disease_disease]->(level2:disease) RETURN level1_count, count(DISTINCT level2) AS level2_count",
+    "difficulty": "Hard",
+    "expected_count": 1
+  },
+  {
+    "id": 92,
+    "question": "Which phenotypes are associated with the child diseases of 'hereditary breast ovarian cancer syndrome'?",
+    "cypher": "MATCH (parent:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_disease]->(child:disease)-[:disease_phenotype_positive]->(p:effect__phenotype) RETURN child.node_name AS child_disease, p.node_name AS phenotype",
+    "difficulty": "Medium",
+    "expected_count": 5
+  },
+  {
+    "id": 105,
+    "question": "Which diseases are grandparents of 'hereditary breast carcinoma' via parent-child relationships?",
+    "cypher": "MATCH (grandparent:disease)-[:disease_disease]->(parent:disease)-[:disease_disease]->(target:disease {node_name: 'hereditary breast carcinoma'}) RETURN DISTINCT grandparent.node_name AS grandparent_disease, parent.node_name AS parent_disease",
+    "difficulty": "Medium",
+    "expected_count": 3
+  },
+  {
+    "id": 133,
+    "question": "Which diseases have as parent a disease whose name contains 'breast'?",
+    "cypher": "MATCH (parent:disease)-[:disease_disease]->(child:disease) WHERE parent.node_name CONTAINS 'breast' RETURN parent.node_name AS parent_disease, child.node_name AS child_disease",
+    "difficulty": "Medium",
+    "expected_count": 210
+  },
+  {
+    "id": 136,
+    "question": "Which diseases are grandchildren of 'breast neoplasm' (two parent-child hops)? Also return the intermediate disease.",
+    "cypher": "MATCH (root:disease {node_name: 'breast neoplasm'})-[:disease_disease]->(mid:disease)-[:disease_disease]->(leaf:disease) RETURN mid.node_name AS intermediate_disease, leaf.node_name AS grandchild_disease",
+    "difficulty": "Medium",
+    "expected_count": 36
+  },
+  {
+    "id": 142,
+    "question": "For the disease 'hereditary breast carcinoma', how many of its associated genes are also found in the disease 'breast neoplasm'?",
+    "cypher": "MATCH (d1:disease {node_name: 'hereditary breast carcinoma'})-[:disease_protein]->(gp:gene__protein) MATCH (d2:disease {node_name: 'breast neoplasm'})-[:disease_protein]->(gp) RETURN count(DISTINCT gp) AS shared_gene_count",
+    "difficulty": "Medium",
+    "expected_count": 1
+  },
+  {
+    "id": 143,
+    "question": "Which child diseases of 'breast neoplasm' also have their own child diseases (i.e., are also parent diseases)?",
+    "cypher": "MATCH (root:disease {node_name: 'breast neoplasm'})-[:disease_disease]->(mid:disease)-[:disease_disease]->(:disease) RETURN DISTINCT mid.node_name AS disease_with_children",
+    "difficulty": "Medium",
+    "expected_count": 7
+  },
+  {
+    "id": 198,
+    "question": "Find the shortest path between the node 'breast neoplasm' and the node 'autosomal dominant disease' using disease_disease relationships. Return the nodes in the path and its length.",
+    "cypher": "MATCH path = shortestPath((start:disease {node_name: 'breast neoplasm'})-[:disease_disease*]-(end:disease {node_name: 'autosomal dominant disease'})) RETURN [n IN nodes(path) | n.node_name] AS path_nodes, length(path) AS path_length",
+    "difficulty": "Hard",
+    "expected_count": 1
+  },
+  {
+    "id": 204,
+    "question": "What is the total connectivity degree (in + out) of each node label? Return the label and the sum of all relationships.",
+    "cypher": "MATCH (n)-[r]-(m) RETURN labels(n)[0] AS node_label, count(r) AS total_connections ORDER BY total_connections DESC",
+    "difficulty": "Hard",
+    "expected_count": 10
+  },
+  {
+    "id": 205,
+    "question": "For each child disease of 'hereditary breast ovarian cancer syndrome', return: name, number of genes, number of phenotypes, number of drugs of any type, and number of exposures.",
+    "cypher": "MATCH (parent:disease {node_name: 'hereditary breast ovarian cancer syndrome'})-[:disease_disease]->(child:disease) OPTIONAL MATCH (child)-[:disease_protein]->(gp:gene__protein) OPTIONAL MATCH (child)-[:disease_phenotype_positive]->(p:effect__phenotype) OPTIONAL MATCH (child)-[:indication|off|contraindication]->(dr:drug) OPTIONAL MATCH (child)-[:exposure_disease]->(e:exposure) RETURN child.node_name AS child_disease, count(DISTINCT gp) AS genes, count(DISTINCT p) AS phenotypes, count(DISTINCT dr) AS drugs, count(DISTINCT e) AS exposures ORDER BY genes DESC",
+    "difficulty": "Hard",
+    "expected_count": 1
+  },
+  {
+    "id": 209,
+    "question": "What are the 5 most connected diseases in terms of distinct neighbors (unique nodes reachable by any relationship in 1 hop)?",
+    "cypher": "MATCH (d:disease)-[r]-(neighbor) WHERE neighbor.node_name IS NOT NULL RETURN d.node_name AS disease, count(DISTINCT neighbor.node_name) AS unique_neighbors ORDER BY unique_neighbors DESC LIMIT 5",
+    "difficulty": "Hard",
+    "expected_count": 5
+  },
+  {
+    "id": 210,
+    "question": "Build a complete comparative profile of the 3 main diseases: for each, return exclusive genes, genes shared with the other two, indicated drugs, off-label drugs, contraindicated drugs, phenotypes, and exposures — all in a single query using chained WITH.",
+    "cypher": "MATCH (d:disease) WHERE d.node_name IN ['hereditary breast ovarian cancer syndrome','hereditary breast carcinoma','breast neoplasm'] OPTIONAL MATCH (d)-[:disease_protein]->(gp:gene__protein) WITH d, collect(DISTINCT gp.node_name) AS all_genes OPTIONAL MATCH (d)-[:indication]->(ind:drug) WITH d, all_genes, collect(DISTINCT ind.node_name) AS indicated OPTIONAL MATCH (d)-[:off]->(off_dr:drug) WITH d, all_genes, indicated, collect(DISTINCT off_dr.node_name) AS off_label OPTIONAL MATCH (d)-[:contraindication]->(contra:drug) WITH d, all_genes, indicated, off_label, collect(DISTINCT contra.node_name) AS contraindicated OPTIONAL MATCH (d)-[:disease_phenotype_positive]->(p:effect__phenotype) WITH d, all_genes, indicated, off_label, contraindicated, collect(DISTINCT p.node_name) AS phenotypes OPTIONAL MATCH (d)-[:exposure_disease]->(e:exposure) RETURN d.node_name AS disease, size(all_genes) AS total_genes, indicated, off_label, contraindicated, phenotypes, collect(DISTINCT e.node_name) AS exposures ORDER BY total_genes DESC",
+    "difficulty": "Hard",
+    "expected_count": 3
+  }
+]
